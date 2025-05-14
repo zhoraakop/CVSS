@@ -1,0 +1,36 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.app-container{
+    max-width: 100%;
+    min-height: 100vh;
+    background-color: #f2f2f2;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%; 
+}
+
+.app-title {
+  font-weight: bold;
+  color: #3b0f32;
+  text-align: center;
+  margin: 0;
+  padding-top: 2rem;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.file-uploader {
+  margin-top: 2rem;
+}
+
+.results-table {
+  margin-top: 2rem;
+}
