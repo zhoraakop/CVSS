@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
-const Vulnerability = require("./models/Vulnerability");
-const connectDB = require("./db");
+const Vulnerability = require("../models/Vulnerability");
+const connectDB = require("./DB");
 
-// Данные для заполнения
 const vulnerabilitiesData = [
   {
     zapPluginId: "0",

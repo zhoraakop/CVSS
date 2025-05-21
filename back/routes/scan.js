@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
-const Vulnerability = require('../models/Vulnerability');
+const Vulnerability = require('../models/Schema');
 
-// Нормализация риска
 function normalizeRisk(risk) {
   if (!risk) return 'Информационный';
 
@@ -61,6 +60,7 @@ router.post('/', async (req, res) => {
             solution: alert.solution,
             risk: normalizeRisk(alert.riskdesc?.split(' ')[0]),
             riskcode: alert.riskcode || '',
+            reference: alert.reference,
           };
 
           let cvssScore = null;

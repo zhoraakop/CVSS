@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import FileUploader from './components/FileUploader/FileUploader';
 import ResultsTable from './components/ResultsTable/ResultsTable';
 import CVSSFormBuilder from './components/CVSSFormBuilder/CVSSFormBuilder';
-import './App.css'; // Создайте этот файл для стилей
+import './App.css';
 
 function App() {
   const [results, setResults] = useState([]);

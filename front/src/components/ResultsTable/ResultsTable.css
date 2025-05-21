@@ -1,18 +1,17 @@
 .table-container {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 32px;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 32px auto 0;
   overflow-x: auto;
   background: white;
   border-radius: 8px;
-  border: 1px solid #ddd;
-  padding: 16px;
+  border: 1px solid #393a93;
+  max-width: 1200px;
 }
 
 .results-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: sans-serif;
+  margin-top: 2rem;
+  margin-left: 24px;
+  margin-right: 24px;
 }
 
 .results-table th,
@@ -24,10 +23,6 @@
 
 .results-table th {
   background-color: #f5f5f5;
-  font-weight: bold;
-}
-
-.results-table .risk {
   font-weight: bold;
 }
 

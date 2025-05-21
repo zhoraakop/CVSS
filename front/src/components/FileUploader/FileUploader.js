@@ -8,24 +8,33 @@ const FileUploader = ({ onResults }) => {
   const [loading, setLoading] = useState(false);
 
   const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
+  const file = e.target.files[0];
 
-    reader.onload = async (e) => {
-      try {
-        setLoading(true);
-        const zapReport = JSON.parse(e.target.result);
-        const response = await axios.post('http://localhost:5000/api/scan', zapReport);
-        onResults(response.data.data); // Передаем результаты в родительский компонент
-      } catch (err) {
-        alert('Ошибка при анализе файла!');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  if (!file) return;
 
-    reader.readAsText(file);
+  const isJsonFile = file.name.toLowerCase().endsWith('.json') || file.type === 'application/json';
+
+  if (!isJsonFile) {
+    alert('Ошибка: Пожалуйста, загрузите файл в формате JSON.');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
+      setLoading(true);
+      const zapReport = JSON.parse(e.target.result); // может выбросить ошибку
+      const response = await axios.post('http://localhost:5000/api/scan', zapReport);
+      onResults(response.data.data);
+    } catch (err) {
+      alert('Ошибка при анализе файла! Убедитесь, что это корректный JSON.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  reader.readAsText(file);
   };
 
   return (
@@ -33,7 +42,10 @@ const FileUploader = ({ onResults }) => {
       <input
         type="file"
         accept=".json"
-        onChange={handleFileUpload}
+        onChange={(e) => {
+          handleFileUpload(e);
+          e.target.value = null;
+        }}
         id="upload-file"
         hidden
       />

@@ -1,5 +1,5 @@
-const maxComposed = require('./max_composed.js');
-const cvssLookup_global  = require('./cvss_lookup.js');
+const maxComposed = require('./MaxComposed.js');
+const cvssLookup_global  = require('./CVSSLookup.js');
 const lookup = cvssLookup_global.cvssLookup_global;
 
 function cvss_score(cvssSelected, lookup, maxSeverityData, macroVectorResult) {

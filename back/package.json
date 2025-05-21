@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "start": "node ./app.js",
-    "dev": "nodemon ./app.js"
+    "start": "node ./App.js",
+    "dev": "nodemon ./App.js"
   },
   "dependencies": {
     "@turingpointde/cvss.js": "^1.5.0",

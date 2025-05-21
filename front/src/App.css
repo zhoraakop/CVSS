@@ -8,6 +8,7 @@ html, body {
     min-height: 100vh;
     background-color: #f2f2f2;
     margin: 0 auto;
+    padding-bottom: 32px;
     font-family: 'Inter', sans-serif;
     text-rendering: optimizeLegibility;
     -moz-osx-font-smoothing: grayscale;
@@ -28,9 +29,5 @@ html, body {
 }
 
 .file-uploader {
-  margin-top: 2rem;
-}
-
-.results-table {
   margin-top: 2rem;
 }

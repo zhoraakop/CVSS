@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  ContentCopy,
   Warning,
   Error,
   CheckCircle,
@@ -12,21 +11,20 @@ import axios from "axios";
 
 const CVSSFormBuilder = () => {
   const [metrics, setMetrics] = useState({
-    // Base Metrics (required)
     AV: "N",
     AC: "L",
     AT: "N",
     PR: "N",
     UI: "N",
-    VC: "H",
-    VI: "H",
-    VA: "H",
-    SC: "H",
-    SI: "H",
-    SA: "H",
-    // Threat Metrics
+    VC: "N",
+    VI: "N",
+    VA: "N",
+    SC: "N",
+    SI: "N",
+    SA: "N",
+
     E: "X",
-    // Environmental Metrics
+
     CR: "X",
     IR: "X",
     AR: "X",
@@ -41,7 +39,7 @@ const CVSSFormBuilder = () => {
     MSC: "X",
     MSI: "X",
     MSA: "X",
-    // Supplemental Metrics
+
     S: "X",
     AU: "X",
     R: "X",
@@ -212,7 +210,9 @@ const CVSSFormBuilder = () => {
       SC: "Влияние на конфиденциальность(SC)",
       SI: "Влияние на целостность(SI)",
       SA: "Влияние на доступность(SA)",
+
       E: "Доступность средств эксплуатации(E)",
+
       CR: "Требования к конфиденциальности(CR)",
       IR: "Требования к целостности(IR)",
       AR: "Требования к доступности(AR)",
@@ -227,6 +227,7 @@ const CVSSFormBuilder = () => {
       MSC: "Влияние на конфиденциальность (корр.)(MSC)",
       MSI: "Влияние на целостность (корр.)(MSI)",
       MSA: "Влияние на доступность (корр.)(MSA)",
+
       S: "Влияние на безопасность(S)",
       AU: "Автоматизация эксплуатации(AU)",
       R: "Восстановление работоспособности(R)",
@@ -263,75 +264,134 @@ const CVSSFormBuilder = () => {
   );
 
   const metricGroups = [
-  {
-    title: "Базовые метрики",
-    metrics: ["AV", "AC", "AT", "PR", "UI", "VC", "VI", "VA", "SC", "SI", "SA"],
-    description: "Базовые метрики отражают характеристики уязвимости, которые не меняются со временем и в разных средах."
-  },
-  {
-    title: "Метрики угроз",
-    metrics: ["E"],
-    description: "Метрики угроз измеряют вероятность атаки и основаны на текущем состоянии методов эксплуатации."
-  },
-  {
-    title: "Контекстные метрики",
-    metrics: ["CR", "IR", "AR", "MAV", "MAC", "MAT", "MPR", "MUI", "MVC", "MVI", "MVA", "MSC", "MSI", "MSA"],
-    description: "Контекстные метрики позволяют адаптировать оценку под конкретную среду эксплуатации."
-  },
-  {
-    title: "Дополнительные метрики",
-    metrics: ["S", "AU", "R", "V", "RE", "U"],
-    description: "Дополнительные метрики предоставляют информацию для специалистов по безопасности."
-  },
-];
+    {
+      title: "Базовые метрики",
+      subgroups: [
+        {
+          title: "Показатели возможности эксплуатации",
+          description: "Характеристики, описывающие условия и сложность эксплуатации уязвимости",
+          metrics: ["AV", "AC", "AT", "PR", "UI"]
+        },
+        {
+          title: "Показатели воздействия на уязвимую систему",
+          description: "Последствия успешной эксплуатации для атакуемой системы",
+          metrics: ["VC", "VI", "VA"]
+        },
+        {
+          title: "Показатели воздействия на последующие системы",
+          description: "Возможные последствия для связанных систем после компрометации",
+          metrics: ["SC", "SI", "SA"]
+        }
+      ],
+      description: "Основные характеристики уязвимости, неизменные во времени и в разных средах"
+    },
+    {
+      title: "Метрики угроз",
+      metrics: ["E"],
+      description: "Вероятность эксплуатации уязвимости на основе текущего состояния угроз"
+    },
+    {
+      title: "Контекстные метрики",
+      subgroups: [
+        {
+          title: "Требования безопасности",
+          description: "Критичность защищаемых активов в конкретной среде",
+          metrics: ["CR", "IR", "AR"]
+        },
+        {
+          title: "Модифицированные базовые метрики(Показатели возможности эксплуатации)",
+          description: "Корректировка базовых показателей для конкретной среды",
+          metrics: ["MAV", "MAC", "MAT", "MPR", "MUI"]
+        },
+        {
+          title: "Модифицированные базовые метрики(Показатели воздействия на уязвимую систему)",
+          description: "Корректировка базовых показателей для конкретной среды",
+          metrics: ["MVC", "MVI", "MVA"]
+        },
+        {
+          title: "Модифицированные базовые метрики(Показатели воздействия на последующие системы)",
+          description: "Корректировка базовых показателей для конкретной среды",
+          metrics: ["MSC", "MSI", "MSA"]
+        }
+      ],
+      description: "Характеристики, уникальные для конкретной среды функционирования"
+    },
+     {
+      title: "Дополнительные метрики",
+      metrics: ["S", "AU", "R", "V", "RE", "U"],
+      description: "Метрики отражают контекст, а также описывают и измеряют дополнительные внешние атрибуты уязвимости."
+    },
+  ];
+
+  const [tooltipOpen, setTooltipOpen] = useState(null);
+  useEffect(() => {
+    const handleClickOutside = () => setTooltipOpen(null);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   return (
     <div className="cvss-container">
-    <h2 className="form-title">Калькулятор для вычисления CVSS оценки (версия 4.0)</h2>
+      <h2 className="form-title">Калькулятор для вычисления CVSS оценки (версия 4.0)</h2>
+      <div className="form-box">
+        {metricGroups.map((group, index) => (
+          <div className="metric-accordion" key={group.title}>
+            <div className="accordion-summary" onClick={() => toggleAccordion(index)}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
+                <h3 className="metric-section-title">{group.title}</h3>
+                <div className="tooltip-wrapper">
+                  <button
+                    className="info-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setTooltipOpen(tooltipOpen === index ? null : index);
+                    }}
+                    title="Информация"
+                  >
+                    <InfoOutlined style={{ fontSize: "16px", color: "#1976d2" }} />
+                  </button>
 
-    <div className="form-box">
-      {metricGroups.map((group, index) => (
-        <div className="metric-accordion" key={group.title}>
-          <div
-            className="accordion-summary"
-            onClick={() => toggleAccordion(index)}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h3 className="metric-section-title">{group.title}</h3>
-              <button 
-                className="info-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  alert(group.description);
-                }}
-                title="Информация"
-              >
-                <InfoOutlined style={{ fontSize: '16px', color: '#1976d2' }} />
-              </button>
-            </div>
-            <span className="accordion-icon">{openAccordion === index ? "▲" : "▼"}</span>
-          </div>
-          {openAccordion === index && (
-            <div className="accordion-details">
-              <div className="metric-grid">
-                {group.metrics.map((metric) => renderMetricButtons(metric))}
+                  {tooltipOpen === index && (
+                    <div className="tooltip-box" onClick={(e) => e.stopPropagation()}>
+                      <strong>{group.title}</strong>
+                      <p>{group.description}</p>
+                    </div>
+                  )}
+                </div>
               </div>
+              <span className="accordion-icon">{openAccordion === index ? "▲" : "▼"}</span>
             </div>
-          )}
-        </div>
-      ))}
+            
+            {openAccordion === index && (
+              <div className="accordion-details">
+                {group.subgroups ? (
+                  group.subgroups.map((subgroup, subIndex) => (
+                    <div key={subIndex} className="subgroup-container">
+                      <h4 className="subgroup-title">
+                        {subgroup.title}
+                      </h4>
+                      <div className="metric-grid">
+                        {subgroup.metrics.map((metric) => renderMetricButtons(metric))}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="metric-grid">
+                    {group.metrics.map((metric) => renderMetricButtons(metric))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
 
         <div className="button-wrapper">
-          <button
-            className="submit-button"
-            onClick={handleEvaluate}
-            disabled={isLoading}
-          >
+          <button className="submit-button" onClick={handleEvaluate} disabled={isLoading}>
             {isLoading ? "Идет рассчет..." : "Рассчитать CVSS"}
           </button>
         </div>
       </div>
-
+      
       {result && (
         <div className="result-box">
           {result.success ? (
@@ -354,7 +414,7 @@ const CVSSFormBuilder = () => {
                   <strong>Оценка:</strong> {result.score.toFixed(1)}
                 </div>
               </div>
-            </> 
+            </>
           ) : (
             <>
               <h4 className="error-title">Ошибка:</h4>
@@ -365,9 +425,7 @@ const CVSSFormBuilder = () => {
               {result.details?.example && (
                 <code>Пример вектора: {result.details.example}</code>
               )}
-              {result.vector && (
-                <code>Сгенерированный вектор: {result.vector}</code>
-              )}
+              {result.vector && <code>Сгенерированный вектор: {result.vector}</code>}
             </>
           )}
         </div>
@@ -375,5 +433,6 @@ const CVSSFormBuilder = () => {
     </div>
   );
 };
+
 
 export default CVSSFormBuilder;

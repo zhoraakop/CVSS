@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { cvss_score, macroVector } = require('../cvss_score');
-const cvssLookup_global = require('../cvss_lookup');
-const { maxSeverity } = require('../max_severity');
+const { cvss_score, macroVector } = require('../CVSSScore');
+const cvssLookup_global = require('../CVSSLookup');
+const { maxSeverity } = require('../MaxSeverity');
 
 // Все метрики CVSS 4.0
 const CVSS4_METRICS = {
