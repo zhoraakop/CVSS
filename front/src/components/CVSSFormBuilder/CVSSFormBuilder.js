@@ -6,10 +6,26 @@ import {
   Info,
 } from "@mui/icons-material";
 import { InfoOutlined } from "@mui/icons-material";
+import AddPopup from '../AddPopup/AddPopup';
 import './CVSSFormBuilder.css';
 import axios from "axios";
 
 const CVSSFormBuilder = () => {
+  const [tooltipOpen, setTooltipOpen] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [result, setResult] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [openAccordion, setOpenAccordion] = useState(null);
+  const toggleAccordion = (index) => {
+    setOpenAccordion(openAccordion === index ? null : index);
+  };
+  const severityMap = {
+    'Информационный': 'Информационный',
+    'Низкая': 'Низкий',
+    'Средняя': 'Средний',
+    'Высокая': 'Высокий',
+    'Критическая': 'Критический'
+  };
   const [metrics, setMetrics] = useState({
     AV: "N",
     AC: "L",
@@ -47,9 +63,6 @@ const CVSSFormBuilder = () => {
     RE: "X",
     U: "X",
   });
-
-  const [result, setResult] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const metricOptions = {
     AV: { N: "Сетевая", A: "Смежный", L: "Локальный", P: "Физический" },
@@ -102,12 +115,10 @@ const CVSSFormBuilder = () => {
     if (!vector.startsWith('CVSS:4.0/')) {
       return false;
     }
-    
     const parts = vector.split('/').slice(1);
     if (parts.length < 11) {
       return false;
     }
-    
     return true;
   };
 
@@ -238,11 +249,6 @@ const CVSSFormBuilder = () => {
     return labels[metric] || metric;
   };
 
-  const [openAccordion, setOpenAccordion] = useState(null);
-
-  const toggleAccordion = (index) => {
-    setOpenAccordion(openAccordion === index ? null : index);
-  };
 
   const renderMetricButtons = (metric) => (
     <div key={metric} className="metric-button-group">
@@ -323,7 +329,7 @@ const CVSSFormBuilder = () => {
     },
   ];
 
-  const [tooltipOpen, setTooltipOpen] = useState(null);
+
   useEffect(() => {
     const handleClickOutside = () => setTooltipOpen(null);
     document.addEventListener("click", handleClickOutside);
@@ -393,43 +399,58 @@ const CVSSFormBuilder = () => {
       </div>
       
       {result && (
-        <div className="result-box">
-          {result.success ? (
-            <>
-              <div className="vector-row">
-                <div className="vector-text">
-                  <strong>Вектор:</strong> {result.vector}
-                </div>
-                <button className="copy-button" onClick={handleCopyVector}>
-                  📋 Копировать
+      <div className="result-box">
+        {result.success ? (
+          <>
+            <div className="vector-row">
+              <div className="vector-text">
+                <strong>Вектор:</strong> {result.vector}
+              </div>
+              <button className="copy-button" onClick={handleCopyVector}>
+                📋 Копировать
+              </button>
+            </div>
+
+            <div className="score-section">
+              {getSeverityIcon(result.severity)}
+              <div className="severity-chip" style={{ backgroundColor: getSeverityColor(result.severity) }}>
+                {result.severity}
+              </div>
+              <div className="score-text">
+                <strong>Оценка:</strong> {result.score.toFixed(1)}
+              </div>
+              <div className="addButton-wrapper">
+                <button className="add-button" onClick={() => setShowPopup(true)}>
+                  Добавить уязвимость
                 </button>
               </div>
+            </div>
 
-              <div className="score-section">
-                {getSeverityIcon(result.severity)}
-                <div className="severity-chip" style={{ backgroundColor: getSeverityColor(result.severity) }}>
-                  {result.severity}
-                </div>
-                <div className="score-text">
-                  <strong>Оценка:</strong> {result.score.toFixed(1)}
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <h4 className="error-title">Ошибка:</h4>
-              <p className="error-text">{result.error}</p>
-              {result.details?.receivedVector && (
-                <code>Отправленный вектор: {result.details.receivedVector}</code>
-              )}
-              {result.details?.example && (
-                <code>Пример вектора: {result.details.example}</code>
-              )}
-              {result.vector && <code>Сгенерированный вектор: {result.vector}</code>}
-            </>
-          )}
-        </div>
-      )}
+
+            {showPopup && (
+              <AddPopup
+                onClose={() => setShowPopup(false)}
+                cvssVector={result.vector}
+                cvssScore={result.score}
+                riskLevel={severityMap[result.severity]}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            <h4 className="error-title">Ошибка:</h4>
+            <p className="error-text">{result.error}</p>
+            {result.details?.receivedVector && (
+              <code>Отправленный вектор: {result.details.receivedVector}</code>
+            )}
+            {result.details?.example && (
+              <code>Пример вектора: {result.details.example}</code>
+            )}
+            {result.vector && <code>Сгенерированный вектор: {result.vector}</code>}
+          </>
+        )}
+      </div>
+    )}
     </div>
   );
 };

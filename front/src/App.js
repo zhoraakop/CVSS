@@ -10,7 +10,6 @@ function App() {
   return (
     <div className="app-container">
       <h1 className="app-title">Анализатор уязвимостей</h1>
-      
       <CVSSFormBuilder />
       
       <FileUploader onResults={setResults} className="file-uploader" />

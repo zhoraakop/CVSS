@@ -3,6 +3,7 @@ const cors = require('cors');
 const connectDB = require('./utils/DB');
 const evaluateRouter = require('./routes/Evaluate');
 const scanRouter = require('./routes/Scan');
+const vulnerabilityRouter = require('./routes/Vulnerability');
 
 const app = express();
 const PORT = 5000;
@@ -17,6 +18,7 @@ app.use(cors({
 
 app.use('/api/scan', scanRouter);
 app.use('/api/evaluate', evaluateRouter);
+app.use('/api/vulnerabilities', vulnerabilityRouter);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

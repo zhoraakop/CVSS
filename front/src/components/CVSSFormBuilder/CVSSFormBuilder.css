@@ -225,3 +225,22 @@
   font-weight: 600;
   padding: 15px 0;
 }
+
+.addButton-wrapper{
+  
+}
+
+.add-button {
+  background-color: green;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  margin-top: 0;
+  transition: background-color 0.2s ease;
+}
+
+.add-button:hover {
+  background-color: #45a045;
+}

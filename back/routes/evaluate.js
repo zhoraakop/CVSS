@@ -8,43 +8,40 @@ const { maxSeverity } = require('../MaxSeverity');
 const CVSS4_METRICS = {
   // Base Metrics (обязательные)
   AV: ['N', 'A', 'L', 'P'],  // Вектор атаки
-  AC: ['L', 'H'],             // Сложность атаки
-  AT: ['N', 'P'],             // Требования к атаке
-  PR: ['N', 'L', 'H'],        // Уровень привилегий
-  UI: ['N', 'P', 'A'],        // Взаимодействие с пользователем
-  VC: ['H', 'L', 'N'],        // Влияние на конфиденциальност
-  VI: ['H', 'L', 'N'],        // Влияние на целостность
-  VA: ['H', 'L', 'N'],        // Влияние на доступность
-  SC: ['H', 'L', 'N'],        // Влияние на конфиденциальность
-  SI: ['H', 'L', 'N'],        // Влияние на целостность
-  SA: ['H', 'L', 'N'],        // Влияние на доступность
-  
+  AC: ['L', 'H'], // Сложность атаки
+  AT: ['N', 'P'], // Требования к атаке
+  PR: ['N', 'L', 'H'], // Уровень привилегий
+  UI: ['N', 'P', 'A'], // Взаимодействие с пользователем
+  VC: ['H', 'L', 'N'], // Влияние на конфиденциальност
+  VI: ['H', 'L', 'N'], // Влияние на целостность
+  VA: ['H', 'L', 'N'], // Влияние на доступность
+  SC: ['H', 'L', 'N'], // Влияние на конфиденциальность
+  SI: ['H', 'L', 'N'], // Влияние на целостность
+  SA: ['H', 'L', 'N'], // Влияние на доступность
   // Threat Metrics
-  E: ['X', 'A', 'P', 'U'],    // Exploit Maturity
-  
+  E: ['X', 'A', 'P', 'U'],
   // Environmental Metrics
-  CR: ['X', 'H', 'M', 'L'],   // Confidentiality Requirement
-  IR: ['X', 'H', 'M', 'L'],   // Integrity Requirement
-  AR: ['X', 'H', 'M', 'L'],   // Availability Requirement
-  MAV: ['X', 'N', 'A', 'L', 'P'],  // Modified Attack Vector
-  MAC: ['X', 'L', 'H'],       // Modified Attack Complexity
-  MAT: ['X', 'N', 'P'],       // Modified Attack Requirements
-  MPR: ['X', 'N', 'L', 'H'],  // Modified Privileges Required
-  MUI: ['X', 'N', 'P', 'A'],  // Modified User Interaction
-  MVC: ['X', 'H', 'L', 'N'],  // Modified Confidentiality Impact
-  MVI: ['X', 'H', 'L', 'N'],  // Modified Integrity Impact
-  MVA: ['X', 'H', 'L', 'N'],  // Modified Availability Impact
-  MSC: ['X', 'H', 'L', 'N'],  // Modified Sub Confidentiality
-  MSI: ['X', 'S', 'H', 'L', 'N'], // Modified Sub Integrity
-  MSA: ['X', 'S', 'H', 'L', 'N'], // Modified Sub Availability
-  
+  CR: ['X', 'H', 'M', 'L'],
+  IR: ['X', 'H', 'M', 'L'],
+  AR: ['X', 'H', 'M', 'L'],
+  MAV: ['X', 'N', 'A', 'L', 'P'],
+  MAC: ['X', 'L', 'H'],
+  MAT: ['X', 'N', 'P'],
+  MPR: ['X', 'N', 'L', 'H'],
+  MUI: ['X', 'N', 'P', 'A'],
+  MVC: ['X', 'H', 'L', 'N'],
+  MVI: ['X', 'H', 'L', 'N'],
+  MVA: ['X', 'H', 'L', 'N'],
+  MSC: ['X', 'H', 'L', 'N'],
+  MSI: ['X', 'S', 'H', 'L', 'N'],
+  MSA: ['X', 'S', 'H', 'L', 'N'], 
   // Supplemental Metrics
-  S: ['X', 'N', 'P'],    // Safety Impact
-  AU: ['X', 'N', 'Y'],        // Automatable
-  R: ['X', 'A', 'U', 'I'],    // Recovery
-  V: ['X', 'D', 'C'],         // Value Density
-  RE: ['X', 'L', 'M', 'H'],   // Response Effort
-  U: ['X', 'Clear', 'Green', 'Amber', 'Red'] // Provider Urgency
+  S: ['X', 'N', 'P'],
+  AU: ['X', 'N', 'Y'],
+  R: ['X', 'A', 'U', 'I'],
+  V: ['X', 'D', 'C'],
+  RE: ['X', 'L', 'M', 'H'],
+  U: ['X', 'Clear', 'Green', 'Amber', 'Red']
 };
 
 function validateVector(vector) {
